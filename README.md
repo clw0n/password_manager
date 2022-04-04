@@ -1,5 +1,6 @@
 # password_manager (not finished)
-Offline password manager that uses python and SQL database 
+Offline password manager that uses python and SQL database.
+
 The main user that you create in the first place is the main 'model' that you will use in order to store your passwords.
 You can change that by either creating a new user, (which will take more time due to the different names you can use everytime)
 Or you can simply change the value of the name and / or the email, which just results in creating a new "user";
