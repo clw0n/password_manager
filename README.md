@@ -1,4 +1,4 @@
-# password_manager (not finished)
+# password-manager_serverless-version (not finished)
 Offline password manager that uses python and SQL database.
 
 The main user that you create in the first place is the main 'model' that you will use in order to store your passwords.
