@@ -134,12 +134,7 @@ def update_password():
 def delete_line():
     pass
 
-def master_key():
-    pass
-
-def login():
-    pass
-
+def hash_
 
 if __name__ == "__main__":
     print_database()
