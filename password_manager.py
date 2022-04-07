@@ -22,8 +22,11 @@ def register():
     File.write(f"{password}")
     File.write("\n")
     File.close()
+    print("Compte crée.")
+    login()
     
 def login():
+    print("Veuillez vous enregistrer !")
     username = eval(input("Veuillez entrer votre nom : "))
     password = input("Veuillez entrer votre mot de passe : ")
     for line in open("accountext.txt").readlines():
@@ -31,9 +34,9 @@ def login():
         print(login_info)
         if username == login_info[0] and password == login_info[1]:
             print("Bienvenue !")
+            database_exists()
         else:
-            print(login_info)
-    database_methods()
+            print("Mot de passe ou nom d'utilisateur incorrect.")
 
 def database_exists():
     try:
@@ -70,7 +73,8 @@ def database_methods():
     3) Mettre à jour un mot de passe
     4) Supprimer un mot de passe (supprimer une ligne de la base de données)
     5) Ajouter / Changer d'utilisateur dans la table USERS 
-    6) Quitter
+    6) Afficher la base de données
+    7) Quitter
     >>> ... """))
 
     if choix == 1:
@@ -84,7 +88,9 @@ def database_methods():
     elif choix ==5:
         create_change_user()
     elif choix == 6:
-        print("À bientôt !")
+        print_database()
+    elif choix == 7:
+        print("À Bientôt !")
     else:
         print("Veuillez entrer un numéro valide !")
 
@@ -108,33 +114,46 @@ def generate_password():
 
 def search_password():
     search = input(">>> ...")
-
+    conn = sqlite3.connect("passwords.db")
+    cursor = conn.cursor()
+    cursor.execute(f"""SELECT password FROM passwords WHERE user = '{search}' or email = '{search}' or website = '{search}' """)
+    cursor.fetchrow()
+    result = cursor.fetchall()
+    for rows in result:
+        if search == ('{5}'.format(rows[5])):
+            print(f"""[+] Match found for {search} : '{result}'""")
+        else:
+            print("[-] No Match Found !")
+    conn.commit()
+    conn.close()
+    
 def print_database():
     conn = sqlite3.connect("passwords.db")
     cursor = conn.cursor()
     cursor.execute("""SELECT * FROM passwords""")
     database = cursor.fetchall() 
-    a = ("""| id | user | email | password | date |""")
+    id = "id"
+    user = "user"
+    email = "email"
+    password = "password"
+    date = "date"
+    a = ("""| {id} | {user} | {email} | {password} | {date} |""")
     b = ("="* len(a))
     print(b)
     print(a)
     print(b)
-    for lines in database:
-        for values in lines:
-            print(values)
-            ##need to store the values into a list
+    #boucler deux indices (i, j) sur la variable database: pour faire en sorte de centrer les indices de a, il faut soustraire la taille de l'élément
+    #associé pour vérifier si son nombre est pair ou pas : si la soustraction est paire, alors on ajoute simplement un nombre d'espace de chaque côté
+    #de l'indicateur pour le centrer, si la soustraction est impaire, il nous suffit simplement de rajouter 1 au résultat de la soustraction
+    #et effectuer le même procédé précédent. Si la soustraction est négative, alors il nous suffit de faire le même procédé mais en inverse.
     conn.commit()
     conn.close()
-    #should center the values in a list below a and b, adding spaces between the pipes || in a and b according to the size of the values in the list.
-    ## to do that, i should put a space inside a variable, and then add it to center the values between the pipe, so that the space (in the variable) loops and add to a with an if statement:
-    ##                                                                                                      
+    
 def update_password():
     pass
 
 def delete_line():
     pass
 
-def hash_
-
 if __name__ == "__main__":
-    print_database()
+    root()
