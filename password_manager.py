@@ -134,75 +134,57 @@ def print_database():
     cursor = conn.cursor()
     cursor.execute("""SELECT * FROM passwords""")
     database = cursor.fetchall() 
-    id = "id"
-    user = "user"
-    email = "email"
-    password = "password"
-    date = "date"
+    id = ""
+    user = ""
+    email = ""
+    website = ""
+    password = ""
     space = " "
-    a = (f"""|{id}|{user}|{email}|{password}|{date}|""")
+    top = ("|id|", "|user|", "|email|", "|website|", "|password|")
+    a = (f"""|{id}|{user}|{email}|{website}|{password}|""")
     b = ("="* len(a))
     print(b)
-    print(a)
-    print(b)
-    ##pas fini:
-    for i in database:
-        for j in i:
-            for elems in a:
-		if len(i)- len(elems) <0:
-			if len(i) -len(elems) %2 ==0:
-				space = space*len(elems)
-				i = space/2 + i + space/2
-				l = []
-				elems = list(elems)
-				elems.append(l)
-				print(l)
 
-			elif len(i) -len(elems) %2 !=0 and len(i) - len(elems)< -1:
+    for rows in database:
+	id = ('{0}'.format(rows[0]))
+	user = ('{1}'.format(rows[1]))
+	email = ('{2}'.format(rows[2]))
+	website = ('{3}'.format(rows[3]))
+	password = ('{4}'.format(rows[4]))
+	print(b)
+	    for elems in top:
+		for i in rows:
+		    if len(i)-len(elems) <0:
+			if len(i)-len(elems) %2 ==0:
+			    space = space*len(elems)
+			    i = space/2 + i + space/2
+
+			elif len(i)-len(elems) %2 !=0 and len(i) - len(elems)< -1:
 				elems = elems + space
 				space = space*len(elems)
 				i = space/2 + i + space/2
-				l = []
-				elems = list(elems)
-				elems.append(l)
-				print(l)
+
 			else:
 				space = " "
 				i = i + space
-				l = []
-				elems = list(elems)
-				elems.append(l)
-				print(l)
 
 		elif len(i)- len(elems) >0:
 			if len(i)- len(elems)%2 ==0:
 				space = space*len(elems)
 				elems = space/2 + elems + space/2
-				l = []
-				elems = list(elems)
-				elems.append(l)
-				print(l)
 
 			elif len(i)- len(elems) %2!=0 and len(i)-len(elems)>1:
 				i = i + space
 				space = space*len(i)
 				elems = space/2 + elems + space/2
-				l = []
-				elems = list(elems)
-				elems.append(l)
-				print(l)
+
 			else:
 				space = " "
 				elems = elems + space
-				l = []
-				elems = list(elems)
-				elems.append(l)
-				print(l)
-		else:
-			l = []
-			elems = list(elems)
-			elems.append(l_vide)
-			print(l)
+ 
+		
+		print(a)
+		print(b)
 
     conn.commit()
     conn.close()
