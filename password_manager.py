@@ -24,7 +24,8 @@ def register():
     File.close()
     print("Compte crée.")
     login()
-    
+
+
 def login():
     print("Veuillez vous enregistrer !")
     username = eval(input("Veuillez entrer votre nom : "))
@@ -121,12 +122,13 @@ def search_password():
     result = cursor.fetchall()
     for rows in result:
         if search == ('{5}'.format(rows[5])):
-            print(f"""[+] Match found for {search} : '{result}'""")
+            print(f"""[+] Résultat trouvé pour {search} : '{result}'""")
         else:
-            print("[-] No Match Found !")
+            print("[-] Aucun résultat trouvé !")
     conn.commit()
     conn.close()
-    
+    return password
+
 def print_database():
     conn = sqlite3.connect("passwords.db")
     cursor = conn.cursor()
@@ -137,23 +139,90 @@ def print_database():
     email = "email"
     password = "password"
     date = "date"
-    a = ("""| {id} | {user} | {email} | {password} | {date} |""")
+    space = " "
+    a = (f"""|{id}|{user}|{email}|{password}|{date}|""")
     b = ("="* len(a))
     print(b)
     print(a)
     print(b)
-    #boucler deux indices (i, j) sur la variable database: pour faire en sorte de centrer les indices de a, il faut soustraire la taille de l'élément
-    #associé pour vérifier si son nombre est pair ou pas : si la soustraction est paire, alors on ajoute simplement un nombre d'espace de chaque côté
-    #de l'indicateur pour le centrer, si la soustraction est impaire, il nous suffit simplement de rajouter 1 au résultat de la soustraction
-    #et effectuer le même procédé précédent. Si la soustraction est négative, alors il nous suffit de faire le même procédé mais en inverse.
+    ##pas fini:
+    for i in database:
+        for j in i:
+            for elems in a:
+		if len(i)- len(elems) <0:
+			if len(i) -len(elems) %2 ==0:
+				space = space*len(elems)
+				i = space/2 + i + space/2
+				l = []
+				elems = list(elems)
+				elems.append(l)
+				print(l)
+
+			elif len(i) -len(elems) %2 !=0 and len(i) - len(elems)< -1:
+				elems = elems + space
+				space = space*len(elems)
+				i = space/2 + i + space/2
+				l = []
+				elems = list(elems)
+				elems.append(l)
+				print(l)
+			else:
+				space = " "
+				i = i + space
+				l = []
+				elems = list(elems)
+				elems.append(l)
+				print(l)
+
+		elif len(i)- len(elems) >0:
+			if len(i)- len(elems)%2 ==0:
+				space = space*len(elems)
+				elems = space/2 + elems + space/2
+				l = []
+				elems = list(elems)
+				elems.append(l)
+				print(l)
+
+			elif len(i)- len(elems) %2!=0 and len(i)-len(elems)>1:
+				i = i + space
+				space = space*len(i)
+				elems = space/2 + elems + space/2
+				l = []
+				elems = list(elems)
+				elems.append(l)
+				print(l)
+			else:
+				space = " "
+				elems = elems + space
+				l = []
+				elems = list(elems)
+				elems.append(l)
+				print(l)
+		else:
+			l = []
+			elems = list(elems)
+			elems.append(l_vide)
+			print(l)
+
     conn.commit()
     conn.close()
-    
+
+
 def update_password():
-    pass
+    conn = sqlite3.connect("passwords.db")
+    cursor = conn.cursor()
+    if search_password():
+        cursor.execute(f"""UPDATE password FROM passwords where * = '{search}' """)
+        conn.commit()
+        conn.close()
+    else:
+        print("Aucun mot de passe trouvé !")
+        conn.commit()
+        conn.close()
 
 def delete_line():
     pass
+    #deletes line with function search_password()
 
 if __name__ == "__main__":
     root()
