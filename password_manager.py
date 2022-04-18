@@ -1,43 +1,14 @@
 import os, string, random,  sqlite3
 from django.db import OperationalError
-from fastapi import File
+from tabulate import tabulate
 
-def root():
-    if not os.geteuid() == 0:
-        print("Vous devez être root !")
-    else:
-        user = os.getlogin()
+
+if not os.geteuid() == 0:
+	print("Vous devez être root !")
+else:
+	user = os.getlogin()
         print(f"Bienvenue, {user} !")
         database_exists()
-
-def register():
-    global username
-    username = eval(input("Veuillez entrer votre nom : "))
-    print(type(username))
-    print(type(password))
-    password = eval(input("Veuillez entrer votre mot de passe : "))
-    File = open("accountext.txt", "a")
-    File.write(f"{username}")
-    File.write(" ")
-    File.write(f"{password}")
-    File.write("\n")
-    File.close()
-    print("Compte crée.")
-    login()
-
-
-def login():
-    print("Veuillez vous enregistrer !")
-    username = eval(input("Veuillez entrer votre nom : "))
-    password = input("Veuillez entrer votre mot de passe : ")
-    for line in open("accountext.txt").readlines():
-        login_info = line.split()
-        print(login_info)
-        if username == login_info[0] and password == login_info[1]:
-            print("Bienvenue !")
-            database_exists()
-        else:
-            print("Mot de passe ou nom d'utilisateur incorrect.")
 
 def database_exists():
     try:
@@ -58,7 +29,7 @@ def database_exists():
         print("Veuillez configurer le nom d'utilisateur et l'email pour les mots de passe. ")
         create_change_user()
     except sqlite3.OperationalError:
-        login()
+        database_methods()
 
 def create_change_user():
     global user
@@ -134,58 +105,8 @@ def print_database():
     cursor = conn.cursor()
     cursor.execute("""SELECT * FROM passwords""")
     database = cursor.fetchall() 
-    id = ""
-    user = ""
-    email = ""
-    website = ""
-    password = ""
-    space = " "
-    top = ("|id|", "|user|", "|email|", "|website|", "|password|")
-    a = (f"""|{id}|{user}|{email}|{website}|{password}|""")
-    b = ("="* len(a))
-    print(b)
-
-    for rows in database:
-	id = ('{0}'.format(rows[0]))
-	user = ('{1}'.format(rows[1]))
-	email = ('{2}'.format(rows[2]))
-	website = ('{3}'.format(rows[3]))
-	password = ('{4}'.format(rows[4]))
-	print(b)
-	    for elems in top:
-		for i in rows:
-		    if len(i)-len(elems) <0:
-			if len(i)-len(elems) %2 ==0:
-			    space = space*len(elems)
-			    i = space/2 + i + space/2
-
-			elif len(i)-len(elems) %2 !=0 and len(i) - len(elems)< -1:
-				elems = elems + space
-				space = space*len(elems)
-				i = space/2 + i + space/2
-
-			else:
-				space = " "
-				i = i + space
-
-		elif len(i)- len(elems) >0:
-			if len(i)- len(elems)%2 ==0:
-				space = space*len(elems)
-				elems = space/2 + elems + space/2
-
-			elif len(i)- len(elems) %2!=0 and len(i)-len(elems)>1:
-				i = i + space
-				space = space*len(i)
-				elems = space/2 + elems + space/2
-
-			else:
-				space = " "
-				elems = elems + space
- 
-		
-		print(a)
-		print(b)
-
+    headers = ["id", "user", "email", "website", "password"]
+    print(tabulate(database, headers, tablefmt="fancy_grid"))
     conn.commit()
     conn.close()
 
@@ -201,10 +122,6 @@ def update_password():
         print("Aucun mot de passe trouvé !")
         conn.commit()
         conn.close()
-
-def delete_line():
-    pass
-    #deletes line with function search_password()
 
 if __name__ == "__main__":
     root()
