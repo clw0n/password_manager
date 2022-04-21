@@ -122,6 +122,3 @@ def update_password():
         print("Aucun mot de passe trouvé !")
         conn.commit()
         conn.close()
-
-if __name__ == "__main__":
-    root()
